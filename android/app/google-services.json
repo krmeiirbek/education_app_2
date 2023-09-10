@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "534533412946",
+    "project_id": "my-exam-777",
+    "storage_bucket": "my-exam-777.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534533412946:android:1628abd6f572a7442ce78b",
+        "android_client_info": {
+          "package_name": "com.krmeiirbek.education_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "534533412946-49h63f15leevjbu8aoue4ueqjr67qs0d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrNriAgnJuJbfHB_IpwOc9CG1gtRQV6XM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "534533412946-49h63f15leevjbu8aoue4ueqjr67qs0d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "534533412946-mloul3c27nmvjkttmp4sfjbasf926mkk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kazybek.meiirbek.myexam"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
