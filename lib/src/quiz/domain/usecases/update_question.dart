@@ -10,19 +10,39 @@ class UpdateQuestion extends UsecaseWithParams<void, UpdateQuestionParams> {
   final QuizRepo _repo;
 
   @override
-  ResultFuture<void> call(UpdateQuestionParams params) async => _repo
-      .updateQuestion(action: params.action, questionData: params.questionData);
+  ResultFuture<void> call(UpdateQuestionParams params) async =>
+      _repo.updateQuestion(
+        action: params.action,
+        questionData: params.questionData,
+        courseId: params.courseId,
+        quizId: params.quizId,
+        questionId: params.questionId,
+      );
 }
 
 class UpdateQuestionParams extends Equatable {
-  const UpdateQuestionParams(
-      {required this.action, required this.questionData});
+  const UpdateQuestionParams({
+    required this.action,
+    required this.questionData,
+    required this.courseId,
+    required this.quizId,
+    required this.questionId,
+  });
 
   const UpdateQuestionParams.empty()
-      : this(action: UpdateQuestionAction.question, questionData: '');
+      : this(
+          action: UpdateQuestionAction.question,
+          questionData: '',
+          courseId: '',
+          quizId: '',
+          questionId: '',
+        );
 
   final UpdateQuestionAction action;
   final dynamic questionData;
+  final String courseId;
+  final String quizId;
+  final String questionId;
 
   @override
   List<dynamic> get props => [action, questionData];

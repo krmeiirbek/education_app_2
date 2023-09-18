@@ -7,17 +7,20 @@ class QuestionModel extends Question {
   const QuestionModel({
     required super.id,
     required super.question,
+    required super.courseId,
     required super.quizId,
     required super.answers,
     super.image,
     super.text,
     super.description,
+    super.imageIsFile,
   });
 
   QuestionModel.empty()
       : this(
           id: '_empty.id',
           question: '_empty.question',
+          courseId: '_empty.courseId',
           quizId: '_empty.quizId',
           image: '_empty.image',
           text: '_empty.text',
@@ -29,6 +32,7 @@ class QuestionModel extends Question {
       : super(
           id: map['id'] as String,
           question: map['question'] as String,
+          courseId: map['courseId'] as String,
           quizId: map['quizId'] as String,
           answers: (map['answers'] as List<DataMap>)
               .map(AnswerModel.fromMap)
@@ -41,8 +45,10 @@ class QuestionModel extends Question {
   QuestionModel copyWith({
     String? id,
     String? question,
+    String? courseId,
     String? quizId,
     String? image,
+    bool? imageIsFile,
     String? text,
     String? description,
     List<Answer>? answers,
@@ -50,9 +56,11 @@ class QuestionModel extends Question {
       QuestionModel(
         id: id ?? this.id,
         question: question ?? this.question,
+        courseId: courseId ?? this.courseId,
         quizId: quizId ?? this.quizId,
         answers: answers ?? this.answers,
         image: image ?? this.image,
+        imageIsFile: imageIsFile ?? this.imageIsFile,
         text: text ?? this.text,
         description: description ?? this.description,
       );
@@ -60,6 +68,7 @@ class QuestionModel extends Question {
   DataMap toMap() => {
         'id': id,
         'question': question,
+        'courseId': courseId,
         'quizId': quizId,
         'image': image,
         'text': text,

@@ -5,11 +5,13 @@ class Question extends Equatable {
   const Question({
     required this.id,
     required this.question,
+    required this.courseId,
     required this.quizId,
     required this.answers,
     this.image,
     this.text,
     this.description,
+    this.imageIsFile = false,
   });
 
   Question.empty()
@@ -17,6 +19,7 @@ class Question extends Equatable {
           id: '_empty.id',
           question: '_empty.question',
           quizId: '_empty.quizId',
+          courseId: '_empty.courseId',
           image: '_empty.image',
           text: '_empty.text',
           answers: [],
@@ -25,8 +28,10 @@ class Question extends Equatable {
 
   final String id;
   final String question;
+  final String courseId;
   final String quizId;
   final String? image;
+  final bool imageIsFile;
   final String? text;
   final List<Answer> answers;
   final String? description;
@@ -36,7 +41,9 @@ class Question extends Equatable {
         id,
         question,
         quizId,
+        courseId,
         image,
+        imageIsFile,
         text,
         answers.length,
         description,
