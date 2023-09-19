@@ -16,6 +16,7 @@ Future<void> init() async {
   await _initAuth();
   await _initCourse();
   await _initVideo();
+  await _initQuiz();
 }
 
 /// Initializes the onboarding-related dependencies.
@@ -71,7 +72,7 @@ Future<void> _initAuth() async {
 Future<void> _initCourse() async {
   sl
     ..registerFactory(
-          () => CourseCubit(
+      () => CourseCubit(
         addCourse: sl(),
         getCourses: sl(),
       ),
@@ -80,7 +81,7 @@ Future<void> _initCourse() async {
     ..registerLazySingleton(() => GetCourses(sl()))
     ..registerLazySingleton<CourseRepo>(() => CourseRepoImpl(sl()))
     ..registerLazySingleton<CourseRemoteDataSrc>(
-          () => CourseRemoteDataSrcImpl(
+      () => CourseRemoteDataSrcImpl(
         firebaseFirestore: sl(),
         firebaseStorage: sl(),
         firebaseAuth: sl(),
@@ -96,6 +97,46 @@ Future<void> _initVideo() async {
     ..registerLazySingleton(() => GetVideos(sl()))
     ..registerLazySingleton<VideoRepo>(() => VideoRepoImpl(sl()))
     ..registerLazySingleton<VideoRemoteDataSrc>(
-          () => VideoRemoteDataSrcImpl(firestore: sl(), auth: sl(), storage: sl()),
+      () => VideoRemoteDataSrcImpl(firestore: sl(), auth: sl(), storage: sl()),
+    );
+}
+
+Future<void> _initQuiz() async {
+  sl
+    ..registerFactory(
+      () => QuizCubit(
+        addQuiz: sl(),
+        getQuizzes: sl(),
+        updateQuiz: sl(),
+        deleteQuiz: sl(),
+        addQuestion: sl(),
+        getQuestions: sl(),
+        updateQuestion: sl(),
+        deleteQuestion: sl(),
+        addAnswer: sl(),
+        getAnswers: sl(),
+        updateAnswer: sl(),
+        deleteAnswer: sl(),
+      ),
+    )
+    ..registerLazySingleton(() => AddQuiz(sl()))
+    ..registerLazySingleton(() => GetQuizzes(sl()))
+    ..registerLazySingleton(() => UpdateQuiz(sl()))
+    ..registerLazySingleton(() => DeleteQuiz(sl()))
+    ..registerLazySingleton(() => AddQuestion(sl()))
+    ..registerLazySingleton(() => GetQuestions(sl()))
+    ..registerLazySingleton(() => UpdateQuestion(sl()))
+    ..registerLazySingleton(() => DeleteQuestion(sl()))
+    ..registerLazySingleton(() => AddAnswer(sl()))
+    ..registerLazySingleton(() => GetAnswers(sl()))
+    ..registerLazySingleton(() => UpdateAnswer(sl()))
+    ..registerLazySingleton(() => DeleteAnswer(sl()))
+    ..registerLazySingleton<QuizRepo>(() => QuizRepoImpl(sl()))
+    ..registerLazySingleton<QuizRemoteDataSrc>(
+      () => QuizRemoteDataSrcImpl(
+        firebaseFirestore: sl(),
+        firebaseStorage: sl(),
+        firebaseAuth: sl(),
+      ),
     );
 }

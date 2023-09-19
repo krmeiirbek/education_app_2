@@ -1,7 +1,7 @@
 import 'package:education_app/core/common/app/providers/course_of_the_day_notifier.dart';
 import 'package:education_app/core/common/app/providers/user_provider.dart';
-import 'package:education_app/core/res/colours.dart';
-import 'package:education_app/core/res/fonts.dart';
+import 'package:education_app/core/common/style/app_light_theme.dart';
+
 import 'package:education_app/core/services/injection_container.dart';
 import 'package:education_app/core/services/router.dart';
 import 'package:education_app/firebase_options.dart';
@@ -54,15 +54,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          useMaterial3: true,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          fontFamily: Fonts.poppins,
-          appBarTheme: const AppBarTheme(color: Colors.transparent),
-          colorScheme:
-          ColorScheme.fromSwatch(accentColor: Colours.primaryColour),
-        ),
-
+        theme: LightTheme.buildLightTheme(),
         // Define the route generation function.
         onGenerateRoute: generateRoute,
       ),

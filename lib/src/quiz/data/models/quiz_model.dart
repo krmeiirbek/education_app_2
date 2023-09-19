@@ -31,9 +31,10 @@ class QuizModel extends Quiz {
           id: map['id'] as String,
           title: map['title'] as String,
           courseId: map['courseId'] as String,
-          questions: (map['questions'] as List<DataMap>)
-              .map(QuestionModel.fromMap)
-              .toList(),
+          // questions: (map['questions'] as List<DataMap>)
+          //     .map(QuestionModel.fromMap)
+          //     .toList(),
+          questions: [],
           createdAt: (map['createdAt'] as Timestamp).toDate(),
           updatedAt: (map['updatedAt'] as Timestamp).toDate(),
           description: map['description'] as String?,

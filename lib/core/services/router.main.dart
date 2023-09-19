@@ -65,7 +65,15 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
     case CourseDetailsScreen.routeName:
       return _pageBuilder(
-            (_) => CourseDetailsScreen(settings.arguments! as Course),
+        (_) => CourseDetailsScreen(settings.arguments! as Course),
+        settings: settings,
+      );
+    case QuizVariantsScreen.routeName:
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => sl<QuizCubit>(),
+          child: QuizVariantsScreen(settings.arguments! as String),
+        ),
         settings: settings,
       );
     default:

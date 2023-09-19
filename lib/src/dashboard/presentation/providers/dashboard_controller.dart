@@ -7,6 +7,7 @@ import 'package:education_app/src/course/features/videos/presentation/cubit/vide
 import 'package:education_app/src/course/presentation/cubit/course_cubit.dart';
 import 'package:education_app/src/home/presentation/views/home_view.dart';
 import 'package:education_app/src/profile/presentation/views/profile_view.dart';
+import 'package:education_app/src/quiz/presentation/views/quiz_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +59,18 @@ class DashboardController extends ChangeNotifier {
       child: const PersistentView(),
     ),
     ChangeNotifierProvider(
-      create: (_) => TabNavigator(TabItem(child: const Placeholder())),
+      create: (_) => TabNavigator(
+        TabItem(
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => sl<CourseCubit>(),
+              ),
+            ],
+            child: const QuizView(),
+          ),
+        ),
+      ),
       child: const PersistentView(),
     ),
     ChangeNotifierProvider(
@@ -66,10 +78,12 @@ class DashboardController extends ChangeNotifier {
       child: const PersistentView(),
     ),
   ];
+
   List<Widget> get screens => _screens;
 
   // This variable keeps track of the currently selected screen index.
   int _currentIndex = 3;
+
   int get currentIndex => _currentIndex;
 
   /// This method is used to change the current screen `index`. It takes an `index`
