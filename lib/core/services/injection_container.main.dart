@@ -17,6 +17,8 @@ Future<void> init() async {
   await _initCourse();
   await _initVideo();
   await _initQuiz();
+  await _initMaterial();
+  await _initExam();
 }
 
 /// Initializes the onboarding-related dependencies.
@@ -138,5 +140,55 @@ Future<void> _initQuiz() async {
         firebaseStorage: sl(),
         firebaseAuth: sl(),
       ),
+    );
+}
+
+
+/// Initializes the material-related dependencies.
+Future<void> _initMaterial() async {
+  sl
+    ..registerFactory(
+          () => MaterialCubit(
+        addMaterial: sl(),
+        getMaterials: sl(),
+      ),
+    )
+    ..registerLazySingleton(() => AddMaterial(sl()))
+    ..registerLazySingleton(() => GetMaterials(sl()))
+    ..registerLazySingleton<MaterialRepo>(() => MaterialRepoImpl(sl()))
+    ..registerLazySingleton<MaterialRemoteDataSrc>(
+          () => MaterialRemoteDataSrcImpl(
+        firestore: sl(),
+        auth: sl(),
+        storage: sl(),
+      ),
+    )
+    ..registerFactory(() => ResourceController(storage: sl(), prefs: sl()));
+}
+
+/// Initializes the exam-related dependencies.
+Future<void> _initExam() async {
+  sl
+    ..registerFactory(
+          () => ExamCubit(
+        getExamQuestions: sl(),
+        getExams: sl(),
+        submitExam: sl(),
+        updateExam: sl(),
+        uploadExam: sl(),
+        getUserCourseExams: sl(),
+        getUserExams: sl(),
+      ),
+    )
+    ..registerLazySingleton(() => GetExamQuestions(sl()))
+    ..registerLazySingleton(() => GetExams(sl()))
+    ..registerLazySingleton(() => SubmitExam(sl()))
+    ..registerLazySingleton(() => UpdateExam(sl()))
+    ..registerLazySingleton(() => UploadExam(sl()))
+    ..registerLazySingleton(() => GetUserCourseExams(sl()))
+    ..registerLazySingleton(() => GetUserExams(sl()))
+    ..registerLazySingleton<ExamRepo>(() => ExamRepoImpl(sl()))
+    ..registerLazySingleton<ExamRemoteDataSrc>(
+          () => ExamRemoteDataSrcImpl(auth: sl(), firestore: sl()),
     );
 }
