@@ -3,7 +3,7 @@ import 'package:education_app/core/utils/typedefs.dart';
 import 'package:education_app/src/quiz/domain/entities/quiz.dart';
 import 'package:education_app/src/quiz/domain/repos/quiz_repo.dart';
 
-class AddQuiz extends UsecaseWithParams<void, Quiz> {
+class AddQuiz extends FutureUsecaseWithParams<void, Quiz> {
   AddQuiz(this._repo);
 
   final QuizRepo _repo;

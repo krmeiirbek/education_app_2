@@ -4,7 +4,7 @@ import 'package:education_app/src/quiz/domain/entities/answer.dart';
 import 'package:education_app/src/quiz/domain/repos/quiz_repo.dart';
 import 'package:equatable/equatable.dart';
 
-class GetAnswers extends UsecaseWithParams<List<Answer>, GetAnswersParams> {
+class GetAnswers extends FutureUsecaseWithParams<List<Answer>, GetAnswersParams> {
   GetAnswers(this._repo);
 
   final QuizRepo _repo;

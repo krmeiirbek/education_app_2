@@ -4,7 +4,7 @@ import 'package:education_app/core/utils/typedefs.dart';
 import 'package:education_app/src/quiz/domain/repos/quiz_repo.dart';
 import 'package:equatable/equatable.dart';
 
-class UpdateQuestion extends UsecaseWithParams<void, UpdateQuestionParams> {
+class UpdateQuestion extends FutureUsecaseWithParams<void, UpdateQuestionParams> {
   UpdateQuestion(this._repo);
 
   final QuizRepo _repo;

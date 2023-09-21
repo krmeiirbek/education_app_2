@@ -3,7 +3,7 @@ import 'package:education_app/core/utils/typedefs.dart';
 import 'package:education_app/src/quiz/domain/repos/quiz_repo.dart';
 import 'package:equatable/equatable.dart';
 
-class DeleteQuiz extends UsecaseWithParams<void, DeleteQuizParams> {
+class DeleteQuiz extends FutureUsecaseWithParams<void, DeleteQuizParams> {
   DeleteQuiz(this._repo);
 
   final QuizRepo _repo;
