@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: LightTheme.buildLightTheme(),
+        theme: MyTheme.buildTheme(),
         // Define the route generation function.
         onGenerateRoute: generateRoute,
       ),

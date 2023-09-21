@@ -1,4 +1,5 @@
 import 'package:education_app/core/common/app/providers/user_provider.dart';
+import 'package:education_app/core/common/values/custom_text_styles.dart';
 import 'package:education_app/core/common/widgets/gradient_background.dart';
 import 'package:education_app/core/common/widgets/rounded_button.dart';
 import 'package:education_app/core/res/fonts.dart';
@@ -39,7 +40,6 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (_, state) {
           if (state is AuthError) {
@@ -58,12 +58,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   shrinkWrap: true,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
-                    const Text(
+                    Text(
                       'Easy to learn, discover more skills.',
-                      style: TextStyle(
+                      style: headlineLarge.copyWith(
                         fontFamily: Fonts.aeonik,
                         fontWeight: FontWeight.w700,
-                        fontSize: 32,
                       ),
                     ),
                     const SizedBox(height: 10),
