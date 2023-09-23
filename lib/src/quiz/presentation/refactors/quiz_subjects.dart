@@ -16,9 +16,9 @@ class QuizSubjects extends StatelessWidget {
         child: ListView.separated(
           itemBuilder: (context, index) => GestureDetector(
             onTap: () => Navigator.of(context).pushNamed(
-              QuizVariantsScreen.routeName,
-              arguments: courses[index].id,
-            ),
+            QuizVariantsScreen.routeName,
+            arguments: courses[index].id,
+          ),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
               child: Row(

@@ -67,7 +67,7 @@ class QuizCubit extends Cubit<QuizState> {
     final result = await _addQuiz(quiz);
     result.fold(
       (failure) => emit(QuizError(failure.errorMessage)),
-      (_) => emit(const QuizAdded()),
+      (_) => emit(QuizAdded(quiz)),
     );
   }
 

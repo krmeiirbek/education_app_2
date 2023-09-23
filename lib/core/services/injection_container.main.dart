@@ -19,6 +19,7 @@ Future<void> init() async {
   await _initQuiz();
   await _initMaterial();
   await _initExam();
+  await _initNotifications();
 }
 
 /// Initializes the onboarding-related dependencies.
@@ -190,5 +191,28 @@ Future<void> _initExam() async {
     ..registerLazySingleton<ExamRepo>(() => ExamRepoImpl(sl()))
     ..registerLazySingleton<ExamRemoteDataSrc>(
           () => ExamRemoteDataSrcImpl(auth: sl(), firestore: sl()),
+    );
+}
+
+/// Initializes the notification-related dependencies.
+Future<void> _initNotifications() async {
+  sl
+    ..registerFactory(
+          () => NotificationCubit(
+        clear: sl(),
+        clearAll: sl(),
+        getNotifications: sl(),
+        markAsRead: sl(),
+        sendNotification: sl(),
+      ),
+    )
+    ..registerLazySingleton(() => Clear(sl()))
+    ..registerLazySingleton(() => ClearAll(sl()))
+    ..registerLazySingleton(() => GetNotifications(sl()))
+    ..registerLazySingleton(() => MarkAsRead(sl()))
+    ..registerLazySingleton(() => SendNotification(sl()))
+    ..registerLazySingleton<NotificationRepo>(() => NotificationRepoImpl(sl()))
+    ..registerLazySingleton<NotificationRemoteDataSrc>(
+          () => NotificationRemoteDataSrcImpl(firestore: sl(), auth: sl()),
     );
 }

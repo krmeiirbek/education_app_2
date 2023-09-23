@@ -14,7 +14,11 @@ class AddingQuiz extends QuizState {
 }
 
 class QuizAdded extends QuizState {
-  const QuizAdded();
+  const QuizAdded(this.quiz);
+  final Quiz quiz;
+
+  @override
+  List<Object?> get props => [quiz];
 }
 
 class LoadingQuiz extends QuizState {

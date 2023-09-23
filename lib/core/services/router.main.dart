@@ -76,6 +76,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         ),
         settings: settings,
       );
+    case AddQuestionsSheet.routeName:
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => sl<QuizCubit>(),
+          child: AddQuestionsSheet(quiz: settings.arguments! as Quiz),
+        ),
+        settings: settings,
+      );
     default:
       return _pageBuilder(
         (_) => const PageUnderConstruction(),

@@ -1,6 +1,6 @@
 import 'package:education_app/core/common/app/providers/course_of_the_day_notifier.dart';
 import 'package:education_app/core/common/app/providers/user_provider.dart';
-import 'package:education_app/core/common/style/app_light_theme.dart';
+import 'package:education_app/core/common/style/app_theme.dart';
 
 import 'package:education_app/core/services/injection_container.dart';
 import 'package:education_app/core/services/router.dart';

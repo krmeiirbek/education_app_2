@@ -7,6 +7,8 @@ import 'package:education_app/src/course/presentation/cubit/course_cubit.dart';
 import 'package:education_app/src/course/presentation/widgets/add_course_sheet.dart';
 import 'package:education_app/src/profile/presentation/widgets/admin_button.dart';
 import 'package:education_app/src/profile/presentation/widgets/user_info_card.dart';
+import 'package:education_app/src/quiz/presentation/cubit/quiz_cubit.dart';
+import 'package:education_app/src/quiz/presentation/widgets/add_quiz_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconly/iconly.dart';
@@ -123,6 +125,32 @@ class ProfileBody extends StatelessWidget {
                     builder: (_) => BlocProvider(
                       create: (_) => sl<CourseCubit>(),
                       child: const AddCourseSheet(),
+                    ),
+                  );
+                },
+              ),
+              AdminButton(
+                label: 'Add Quiz',
+                icon: Icons.newspaper,
+                onPressed: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    backgroundColor: Colors.white,
+                    isScrollControlled: true,
+                    showDragHandle: true,
+                    elevation: 0,
+                    useSafeArea: true,
+                    builder: (_) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (_) => sl<QuizCubit>(),
+                        ),
+                        BlocProvider(
+                          create: (_) => sl<CourseCubit>(),
+                        ),
+                      ],
+
+                      child: const AddQuizSheet(),
                     ),
                   );
                 },

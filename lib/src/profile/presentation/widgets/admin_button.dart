@@ -1,4 +1,4 @@
-import 'package:education_app/core/res/colours.dart';
+import 'package:education_app/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 
 /// A custom button widget designed for administrative actions.
@@ -41,8 +41,8 @@ class AdminButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colours.primaryColour,
-        foregroundColor: Colors.white,
+        backgroundColor: context.theme.primaryColor,
+        foregroundColor: context.theme.colorScheme.secondary,
       ),
       onPressed: onPressed,
       label: Text(label),

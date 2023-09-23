@@ -293,7 +293,7 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
           .collection('quizzes')
           .doc();
 
-      final quizModel = (quiz as QuizModel).copyWith(id: quizRef.id);
+      final quizModel = quiz as QuizModel;
 
       // Save the quiz to Firestore.
       await quizRef.set(quizModel.toMap());

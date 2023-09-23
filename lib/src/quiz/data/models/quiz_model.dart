@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/core/utils/typedefs.dart';
-import 'package:education_app/src/quiz/data/models/question_model.dart';
 import 'package:education_app/src/quiz/domain/entities/question.dart';
 import 'package:education_app/src/quiz/domain/entities/quiz.dart';
 
@@ -12,6 +11,7 @@ class QuizModel extends Quiz {
     required super.questions,
     required super.createdAt,
     required super.updatedAt,
+    required super.questionSize,
     super.description,
   });
 
@@ -22,6 +22,7 @@ class QuizModel extends Quiz {
           courseId: '_empty.courseId',
           description: '_empty.description',
           questions: [],
+          questionSize: 0,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
@@ -31,6 +32,7 @@ class QuizModel extends Quiz {
           id: map['id'] as String,
           title: map['title'] as String,
           courseId: map['courseId'] as String,
+          questionSize: map['questionSize'] as int,
           // questions: (map['questions'] as List<DataMap>)
           //     .map(QuestionModel.fromMap)
           //     .toList(),
@@ -45,6 +47,7 @@ class QuizModel extends Quiz {
     String? title,
     String? courseId,
     List<Question>? questions,
+    int? questionSize,
     DateTime? createdAt,
     DateTime? updatedAt,
     String? description,
@@ -54,6 +57,7 @@ class QuizModel extends Quiz {
         title: title ?? this.title,
         courseId: courseId ?? this.courseId,
         questions: questions ?? this.questions,
+        questionSize: questionSize ?? this.questionSize,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         description: description ?? this.description,
@@ -63,9 +67,10 @@ class QuizModel extends Quiz {
         'id': id,
         'title': title,
         'courseId': courseId,
-        'questions': (questions as List<QuestionModel>)
-            .map((answer) => answer.toMap())
-            .toList(),
+        // 'questions': (questions as List<QuestionModel>)
+        //     .map((answer) => answer.toMap())
+        //     .toList(),
+    'questionSize':questionSize,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
         'description': description,

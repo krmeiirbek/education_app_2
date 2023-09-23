@@ -1,5 +1,4 @@
 import 'package:education_app/core/utils/typedefs.dart';
-import 'package:education_app/src/quiz/data/models/answer_model.dart';
 import 'package:education_app/src/quiz/domain/entities/answer.dart';
 import 'package:education_app/src/quiz/domain/entities/question.dart';
 
@@ -10,6 +9,7 @@ class QuestionModel extends Question {
     required super.courseId,
     required super.quizId,
     required super.answers,
+    required super.answersSize,
     super.image,
     super.text,
     super.description,
@@ -25,6 +25,7 @@ class QuestionModel extends Question {
           image: '_empty.image',
           text: '_empty.text',
           answers: [],
+          answersSize: 0,
           description: '_empty.description',
         );
 
@@ -34,9 +35,11 @@ class QuestionModel extends Question {
           question: map['question'] as String,
           courseId: map['courseId'] as String,
           quizId: map['quizId'] as String,
-          answers: (map['answers'] as List<DataMap>)
-              .map(AnswerModel.fromMap)
-              .toList(),
+          answers: [],
+          answersSize: map['answersSize'] as int,
+          // answers: (map['answers'] as List<DataMap>)
+          //     .map(AnswerModel.fromMap)
+          //     .toList(),
           image: map['image'] as String?,
           text: map['text'] as String?,
           description: map['description'] as String?,
@@ -50,6 +53,7 @@ class QuestionModel extends Question {
     String? image,
     bool? imageIsFile,
     String? text,
+    int? answersSize,
     String? description,
     List<Answer>? answers,
   }) =>
@@ -59,6 +63,7 @@ class QuestionModel extends Question {
         courseId: courseId ?? this.courseId,
         quizId: quizId ?? this.quizId,
         answers: answers ?? this.answers,
+        answersSize: answersSize ?? this.answersSize,
         image: image ?? this.image,
         imageIsFile: imageIsFile ?? this.imageIsFile,
         text: text ?? this.text,
@@ -73,8 +78,9 @@ class QuestionModel extends Question {
         'image': image,
         'text': text,
         'description': description,
-        'answers': (answers as List<AnswerModel>)
-            .map((answer) => answer.toMap())
-            .toList(),
+        'answersSize': answersSize,
+        // 'answers': (answers as List<AnswerModel>)
+        //     .map((answer) => answer.toMap())
+        //     .toList(),
       };
 }

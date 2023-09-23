@@ -8,6 +8,7 @@ class Question extends Equatable {
     required this.courseId,
     required this.quizId,
     required this.answers,
+    required this.answersSize,
     this.image,
     this.text,
     this.description,
@@ -23,6 +24,7 @@ class Question extends Equatable {
           image: '_empty.image',
           text: '_empty.text',
           answers: [],
+          answersSize: 0,
           description: '_empty.description',
         );
 
@@ -33,6 +35,7 @@ class Question extends Equatable {
   final String? image;
   final bool imageIsFile;
   final String? text;
+  final int answersSize;
   final List<Answer> answers;
   final String? description;
 

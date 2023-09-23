@@ -9,6 +9,7 @@ class Quiz extends Equatable {
     required this.questions,
     required this.createdAt,
     required this.updatedAt,
+    required this.questionSize,
     this.description,
   });
 
@@ -19,6 +20,7 @@ class Quiz extends Equatable {
           courseId: '_empty.courseId',
           description: '_empty.description',
           questions: [],
+          questionSize: 0,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
@@ -28,6 +30,7 @@ class Quiz extends Equatable {
   final String courseId;
   final String? description;
   final List<Question> questions;
+  final int questionSize;
   final DateTime createdAt;
   final DateTime updatedAt;
 
