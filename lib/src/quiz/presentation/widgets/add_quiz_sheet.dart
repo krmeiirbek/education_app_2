@@ -53,13 +53,7 @@ class _AddQuizSheetState extends State<AddQuizSheet> {
         } else if (state is AddingQuiz) {
           CoreUtils.showLoadingDialog(context);
         } else if (state is QuizAdded) {
-          // CoreUtils.showSnackBar(context, 'Quiz added successfully');
           Navigator.pop(context);
-
-          Navigator.of(context).pushNamed(
-            AddQuestionsSheet.routeName,
-            arguments: state.quiz,
-          );
           // CoreUtils.showLoadingDialog(context);
           // TODO(Add-Quiz): Send Notifications
         }
@@ -217,7 +211,10 @@ class _AddQuizSheetState extends State<AddQuizSheet> {
                               createdAt: now,
                               updatedAt: now,
                             );
-                            context.read<QuizCubit>().addQuiz(quiz);
+                            Navigator.of(context).pushNamed(
+                              AddQuestionsSheet.routeName,
+                              arguments: quiz,
+                            );
                           }
                         },
                         child: const Text('Add Questions'),

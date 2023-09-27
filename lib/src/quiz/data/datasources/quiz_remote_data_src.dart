@@ -139,7 +139,7 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
       // Authorize the user using FirebaseAuth.
       await DataSourceUtils.authorizeUser(_firebaseAuth);
 
-      return _firebaseFirestore
+      final questions = await _firebaseFirestore
           .collection('courses')
           .doc(courseId)
           .collection('quizzes')
@@ -147,10 +147,17 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
           .collection('questions')
           .get()
           .then(
-            (value) => value.docs
-                .map((doc) => QuestionModel.fromMap(doc.data()))
-                .toList(),
+            (value) => value.docs.map((doc) {
+              final fromMap = QuestionModel.fromMap(doc.data());
+              return fromMap;
+            }).toList(),
           );
+      for (final question in questions) {
+        final answers =
+            await getAnswers(question.courseId, question.quizId, question.id);
+        question.copyWith(answers: answers);
+      }
+      return questions;
     } on FirebaseException catch (e) {
       throw ServerException(
         message: e.message ?? 'Unknown error occurred',
@@ -214,8 +221,8 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
 
       if (answerModel.imageIsFile) {
         final imageRef = _firebaseStorage.ref().child(
-          'quiz_pics/${answerModel.courseId}/${answerModel.quizId}/${answerModel.questionId}/${answerModel.uid}--pfp',
-        );
+              'quiz_pics/${answerModel.courseId}/${answerModel.quizId}/${answerModel.questionId}/${answerModel.uid}--pfp',
+            );
         await imageRef.putFile(File(answerModel.image!)).then((value) async {
           final url = await value.ref.getDownloadURL();
           answerModel = answerModel.copyWith(image: url);
@@ -257,8 +264,8 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
 
       if (questionModel.imageIsFile) {
         final imageRef = _firebaseStorage.ref().child(
-          'quiz_pics/${questionModel.courseId}/${questionModel.quizId}/${questionModel.id}--pfp',
-        );
+              'quiz_pics/${questionModel.courseId}/${questionModel.quizId}/${questionModel.id}--pfp',
+            );
         await imageRef.putFile(File(questionModel.image!)).then((value) async {
           final url = await value.ref.getDownloadURL();
           questionModel = questionModel.copyWith(image: url);
@@ -267,6 +274,10 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
 
       // Save the quiz to Firestore.
       await questionRef.set(questionModel.toMap());
+
+      for (final answer in question.answers) {
+        await addAnswer(answer);
+      }
     } on FirebaseException catch (e) {
       throw ServerException(
         message: e.message ?? 'Unknown error occurred',
@@ -293,10 +304,14 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
           .collection('quizzes')
           .doc();
 
-      final quizModel = quiz as QuizModel;
+      final quizModel = (quiz as QuizModel).copyWith(id: quizRef.id);
 
       // Save the quiz to Firestore.
       await quizRef.set(quizModel.toMap());
+
+      for (final question in quizModel.questions) {
+        await addQuestion(question);
+      }
     } on FirebaseException catch (e) {
       throw ServerException(
         message: e.message ?? 'Unknown error occurred',

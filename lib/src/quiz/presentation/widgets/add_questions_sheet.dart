@@ -1,8 +1,11 @@
 import 'package:education_app/core/extensions/context_extension.dart';
+import 'package:education_app/core/utils/core_utils.dart';
 import 'package:education_app/src/quiz/data/models/answer_model.dart';
 import 'package:education_app/src/quiz/data/models/question_model.dart';
-import 'package:education_app/src/quiz/domain/entities/quiz.dart';
+import 'package:education_app/src/quiz/data/models/quiz_model.dart';
+import 'package:education_app/src/quiz/presentation/cubit/quiz_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddQuestionsSheet extends StatefulWidget {
   const AddQuestionsSheet({
@@ -11,7 +14,7 @@ class AddQuestionsSheet extends StatefulWidget {
   });
 
   static const routeName = 'add-questions-sheet';
-  final Quiz quiz;
+  final QuizModel quiz;
 
   @override
   State<AddQuestionsSheet> createState() => _AddQuestionsSheetState();
@@ -89,7 +92,7 @@ class _AddQuestionsSheetState extends State<AddQuestionsSheet> {
       }
     } else {
       questionController.text = '';
-      for (var i = 0; i < answerSize; i++) {
+      for (var i = 0; i < 6; i++) {
         answerControllers[i].text = '';
       }
       answerSize = 1;
@@ -119,171 +122,199 @@ class _AddQuestionsSheetState extends State<AddQuestionsSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            SizedBox(
-              height: 30,
-              child: ListView.separated(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemBuilder: (context, index) => InkWell(
-                  onTap: () {
-                    changeQuestion(index);
-                  },
-                  child: Container(
-                    height: 30,
-                    width: 30,
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: questionId == index
-                          ? context.theme.colorScheme.primary
-                          : questionIsSET[index]
-                              ? context.theme.colorScheme.surface
-                              : Colors.transparent,
-                      border: questionId == index
-                          ? null
-                          : questionIsSET[index]
-                              ? Border.all(
-                                  color: context.theme.colorScheme.surface,
-                                )
-                              : Border.all(
-                                  color: context.theme.unselectedWidgetColor,
-                                ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${index + 1}',
-                        style: questionId == index
-                            ? const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              )
+    return BlocListener<QuizCubit, QuizState>(
+      listener: (_, state) {
+        if (state is QuizError) {
+          CoreUtils.showSnackBar(context, state.message);
+        }  else if (state is AddingQuiz) {
+          CoreUtils.showLoadingDialog(context);
+        } else if (state is QuizAdded) {
+          CoreUtils.showSnackBar(context, 'Quiz added successfully');
+          Navigator.pop(context);
+          // CoreUtils.showLoadingDialog(context);
+          // TODO(Add-Quiz): Send Notifications
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 30,
+                child: ListView.separated(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  itemBuilder: (context, index) => InkWell(
+                    onTap: () {
+                      changeQuestion(index);
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 30,
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: questionId == index
+                            ? context.theme.colorScheme.primary
                             : questionIsSET[index]
-                                ? TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                    color:
-                                        Theme.of(context).unselectedWidgetColor,
+                                ? context.theme.colorScheme.surface
+                                : Colors.transparent,
+                        border: questionId == index
+                            ? null
+                            : questionIsSET[index]
+                                ? Border.all(
+                                    color: context.theme.colorScheme.surface,
                                   )
-                                : TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                    color:
-                                        Theme.of(context).unselectedWidgetColor,
+                                : Border.all(
+                                    color: context.theme.unselectedWidgetColor,
                                   ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${index + 1}',
+                          style: questionId == index
+                              ? const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                )
+                              : questionIsSET[index]
+                                  ? TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      color: Theme.of(context)
+                                          .unselectedWidgetColor,
+                                    )
+                                  : TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      color: Theme.of(context)
+                                          .unselectedWidgetColor,
+                                    ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                separatorBuilder: (context, index) => const SizedBox(width: 10),
-                itemCount: widget.quiz.questionSize,
-                scrollDirection: Axis.horizontal,
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text('Surakty engiziniz'),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: TextField(
-                controller: questionController,
-                maxLines: 3,
-                // Set to null to allow multiple lines
-                keyboardType: TextInputType.multiline,
-                textAlignVertical: TextAlignVertical.top,
-                // You can use other values like TextAlignVertical.center
-                decoration: const InputDecoration(
-                  hintText: 'Enter your question here',
-                  border: OutlineInputBorder(),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 10),
+                  itemCount: widget.quiz.questionSize,
+                  scrollDirection: Axis.horizontal,
                 ),
               ),
-            ),
-            for (int i = 0; i < answerSize; i++)
-              Container(
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Text('Surakty engiziniz'),
+              ),
+              Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        updateCorrectAnswers(
-                          i,
-                          isCorrect: !correctAnswers.contains(i),
-                        );
-                      },
-                      child: Center(
-                        child: Container(
-                          height: 10,
-                          width: 10,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: correctAnswers.contains(i)
-                                ? context.theme.colorScheme.surface
-                                : context.theme.colorScheme.error,
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: TextField(
+                  controller: questionController,
+                  maxLines: 3,
+                  // Set to null to allow multiple lines
+                  keyboardType: TextInputType.multiline,
+                  textAlignVertical: TextAlignVertical.top,
+                  // You can use other values like TextAlignVertical.center
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your question here',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              for (int i = 0; i < answerSize; i++)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          updateCorrectAnswers(
+                            i,
+                            isCorrect: !correctAnswers.contains(i),
+                          );
+                        },
+                        child: Center(
+                          child: Container(
+                            height: 10,
+                            width: 10,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: correctAnswers.contains(i)
+                                  ? context.theme.colorScheme.surface
+                                  : context.theme.colorScheme.error,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: answerControllers[i],
-                        decoration: InputDecoration(
-                          hintText: 'Enter answer ${i + 1} here',
-                          border: const OutlineInputBorder(),
+                      Expanded(
+                        child: TextField(
+                          controller: answerControllers[i],
+                          decoration: InputDecoration(
+                            hintText: 'Enter answer ${i + 1} here',
+                            border: const OutlineInputBorder(),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (questionIsSET.every((element) => element == true))
+              ElevatedButton(
+                onPressed: () {
+                  context
+                      .read<QuizCubit>()
+                      .addQuiz(widget.quiz.copyWith(questions: questions));
+                },
+                child: const Text(
+                  'Save questions',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
+            if (answerSize > 1)
+              FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    if (answerSize > 1) {
+                      answerSize--;
+                    }
+                  });
+                },
+                child: const Icon(
+                  Icons.remove,
+                  color: Colors.white,
+                ),
+              )
+            else
+              const SizedBox.shrink(),
+            const SizedBox(
+              width: 10,
+            ),
+            if (answerSize < 6)
+              FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    if (answerSize < 6) {
+                      answerSize++;
+                    }
+                  });
+                },
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+              )
+            else
+              const SizedBox.shrink(),
           ],
         ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          if (answerSize > 1)
-            FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  if (answerSize > 1) {
-                    answerSize--;
-                  }
-                });
-              },
-              child: const Icon(
-                Icons.remove,
-                color: Colors.white,
-              ),
-            )
-          else
-            const SizedBox.shrink(),
-          const SizedBox(
-            width: 10,
-          ),
-          if (answerSize < 6)
-            FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  if (answerSize < 6) {
-                    answerSize++;
-                  }
-                });
-              },
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-            )
-          else
-            const SizedBox.shrink(),
-        ],
       ),
     );
   }

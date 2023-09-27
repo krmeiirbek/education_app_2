@@ -23,6 +23,7 @@ class MyColors {
 class MyTheme {
   static ThemeData buildTheme() {
     return ThemeData(
+      useMaterial3: true,
       brightness: Brightness.light,
       scaffoldBackgroundColor: MyColors.primaryBG,
       visualDensity: VisualDensity.adaptivePlatformDensity,
