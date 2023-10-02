@@ -80,34 +80,34 @@ class _CoursePickerState extends State<CoursePicker> {
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
             suffixIcon: state is CoursesLoaded
                 ? PopupMenuButton<String>(
-              offset: const Offset(0, 50),
-              surfaceTintColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              icon: const Icon(Icons.arrow_drop_down),
-              itemBuilder: (context) {
-                return state.courses
-                    .map(
-                      (course) => PopupMenuItem<String>(
-                    value: course.id,
-                    child: Text(course.title),
-                    onTap: () {
-                      widget.controller.text = course.title;
-                      widget.notifier.value = course;
+                    offset: const Offset(0, 50),
+                    surfaceTintColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    icon: const Icon(Icons.arrow_drop_down),
+                    itemBuilder: (context) {
+                      return state.courses
+                          .map(
+                            (course) => PopupMenuItem<String>(
+                              value: course.id,
+                              child: Text(course.title),
+                              onTap: () {
+                                widget.controller.text = course.title;
+                                widget.notifier.value = course;
+                              },
+                            ),
+                          )
+                          .toList();
                     },
-                  ),
-                )
-                    .toList();
-              },
-            )
+                  )
                 : const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                'loading...',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ),
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      'loading...',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {

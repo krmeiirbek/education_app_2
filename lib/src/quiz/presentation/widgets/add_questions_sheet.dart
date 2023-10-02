@@ -33,6 +33,8 @@ class _AddQuestionsSheetState extends State<AddQuestionsSheet> {
   late List<bool> questionIsSET;
   late List<QuestionModel> questions;
 
+  bool showingDialog = false;
+
   String intToAlphabetic(int number) {
     final offset = 'A'.codeUnitAt(0); // ASCII code for 'A'
     final letterIndex = number % 26; // 26 letters in the alphabet
@@ -53,34 +55,52 @@ class _AddQuestionsSheetState extends State<AddQuestionsSheet> {
   }
 
   void changeQuestion(int index) {
-    if (questionController.text.trim() != '' &&
-        answerControllers[0].text.trim() != '') {
-      questions[questionId] = questions[questionId].copyWith(
-        id: questionId.toString(),
-        // Set the question ID as a numeric value
-        quizId: widget.quiz.id,
-        courseId: widget.quiz.courseId,
-        question: questionController.text.trim(),
-        answersSize: answerSize,
-        answers: List.generate(answerSize, (index) {
-          final alphabeticId =
-              intToAlphabetic(index); // Generate an alphabetic ID
-          final isCorrect =
-              correctAnswers.contains(index); // Check if the answer is correct
-          return const AnswerModel.empty().copyWith(
-            uid: alphabeticId,
-            // Set the uid to the alphabetic ID
-            answer: answerControllers[index].text,
-            questionId: index.toString(),
-            // Set the question ID as a numeric value
-            quizId: widget.quiz.id,
-            courseId: widget.quiz.courseId,
-            correct: isCorrect, // Set the correct value based on your logic
-          );
-        }),
-      );
-      questionIsSET[questionId] = true;
+    var answersIsSet = true;
+    for (var i = 0; i < answerSize; i++) {
+      if (answerControllers[i].text.trim() == '') {
+        answersIsSet = false;
+        break;
+      }
     }
+
+    questions[questionId] = questions[questionId].copyWith(
+      id: (questionId + 1).toString().padLeft(2, '0'),
+      // Set the question ID as a numeric value
+      quizId: widget.quiz.id,
+      courseId: widget.quiz.courseId,
+      question: questionController.text.trim(),
+      answersSize: answerSize,
+      answers: List.generate(answerSize, (index) {
+        final alphabeticId =
+            intToAlphabetic(index); // Generate an alphabetic ID
+        final isCorrect =
+            correctAnswers.contains(index); // Check if the answer is correct
+        return const AnswerModel.empty().copyWith(
+          uid: alphabeticId,
+          // Set the uid to the alphabetic ID
+          answer: answerControllers[index].text,
+          questionId: index.toString(),
+          // Set the question ID as a numeric value
+          quizId: widget.quiz.id,
+          courseId: widget.quiz.courseId,
+          correct: isCorrect, // Set the correct value based on your logic
+        );
+      }),
+    );
+
+    if (questionController.text.trim() != '' && answersIsSet) {
+      questionIsSET[questionId] = true;
+    } else {
+      questionIsSET[questionId] = false;
+    }
+
+    for (var i = 0; i < 6; i++) {
+      answerControllers[i].text = '';
+    }
+
+    questionController.text = '';
+    answerSize = 1;
+    correctAnswers.clear();
 
     if (questionIsSET[index]) {
       questionController.text = questions[index].question;
@@ -90,13 +110,6 @@ class _AddQuestionsSheetState extends State<AddQuestionsSheet> {
         answerControllers[i].text = questions[index].answers[i].answer;
         updateCorrectAnswers(i, isCorrect: questions[index].answers[i].correct);
       }
-    } else {
-      questionController.text = '';
-      for (var i = 0; i < 6; i++) {
-        answerControllers[i].text = '';
-      }
-      answerSize = 1;
-      correctAnswers.clear();
     }
 
     setState(() {
@@ -124,18 +137,24 @@ class _AddQuestionsSheetState extends State<AddQuestionsSheet> {
   Widget build(BuildContext context) {
     return BlocListener<QuizCubit, QuizState>(
       listener: (_, state) {
+        if (showingDialog == true) {
+          Navigator.pop(context);
+          showingDialog = false;
+        }
         if (state is QuizError) {
           CoreUtils.showSnackBar(context, state.message);
-        }  else if (state is AddingQuiz) {
+        } else if (state is AddingQuiz) {
           CoreUtils.showLoadingDialog(context);
+          showingDialog = true;
         } else if (state is QuizAdded) {
           CoreUtils.showSnackBar(context, 'Quiz added successfully');
-          Navigator.pop(context);
-          // CoreUtils.showLoadingDialog(context);
-          // TODO(Add-Quiz): Send Notifications
+          Navigator.of(context).pop();
         }
       },
       child: Scaffold(
+        appBar: AppBar(
+
+        ),
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -267,15 +286,20 @@ class _AddQuestionsSheetState extends State<AddQuestionsSheet> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             if (questionIsSET.every((element) => element == true))
-              ElevatedButton(
-                onPressed: () {
-                  context
-                      .read<QuizCubit>()
-                      .addQuiz(widget.quiz.copyWith(questions: questions));
-                },
-                child: const Text(
-                  'Save questions',
-                  style: TextStyle(color: Colors.white),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context
+                          .read<QuizCubit>()
+                          .addQuiz(widget.quiz.copyWith(questions: questions));
+                    },
+                    child: const Text(
+                      'Save questions',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
               ),
             if (answerSize > 1)
@@ -291,9 +315,7 @@ class _AddQuestionsSheetState extends State<AddQuestionsSheet> {
                   Icons.remove,
                   color: Colors.white,
                 ),
-              )
-            else
-              const SizedBox.shrink(),
+              ),
             const SizedBox(
               width: 10,
             ),
@@ -310,9 +332,7 @@ class _AddQuestionsSheetState extends State<AddQuestionsSheet> {
                   Icons.add,
                   color: Colors.white,
                 ),
-              )
-            else
-              const SizedBox.shrink(),
+              ),
           ],
         ),
       ),

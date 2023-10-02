@@ -16,11 +16,11 @@ class QuizSubjects extends StatelessWidget {
         child: ListView.separated(
           itemBuilder: (context, index) => GestureDetector(
             onTap: () => Navigator.of(context).pushNamed(
-            QuizVariantsScreen.routeName,
-            arguments: courses[index].id,
-          ),
+              QuizVariantsScreen.routeName,
+              arguments: courses[index],
+            ),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               child: Row(
                 children: [
                   Container(
@@ -29,7 +29,9 @@ class QuizSubjects extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
-                        image: NetworkImage(courses[index].image ?? kDefaultAvatar),
+                        image: NetworkImage(
+                          courses[index].image ?? kDefaultAvatar,
+                        ),
                         fit: BoxFit.cover,
                       ),
                     ),

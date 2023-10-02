@@ -152,12 +152,13 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
               return fromMap;
             }).toList(),
           );
+      final questionsWithAnswers = <QuestionModel>[];
       for (final question in questions) {
         final answers =
             await getAnswers(question.courseId, question.quizId, question.id);
-        question.copyWith(answers: answers);
+        questionsWithAnswers.add(question.copyWith(answers: answers));
       }
-      return questions;
+      return questionsWithAnswers;
     } on FirebaseException catch (e) {
       throw ServerException(
         message: e.message ?? 'Unknown error occurred',
@@ -187,6 +188,7 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
             (value) =>
                 value.docs.map((doc) => QuizModel.fromMap(doc.data())).toList(),
           );
+
     } on FirebaseException catch (e) {
       throw ServerException(
         message: e.message ?? 'Unknown error occurred',
@@ -215,7 +217,7 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
           .collection('questions')
           .doc(answer.questionId)
           .collection('answers')
-          .doc();
+          .doc(answer.uid);
 
       var answerModel = answer as AnswerModel;
 
@@ -257,7 +259,7 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
           .collection('quizzes')
           .doc(question.quizId)
           .collection('questions')
-          .doc();
+          .doc(question.id);
 
       var questionModel =
           (question as QuestionModel).copyWith(id: questionRef.id);
@@ -276,7 +278,13 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
       await questionRef.set(questionModel.toMap());
 
       for (final answer in question.answers) {
-        await addAnswer(answer);
+        await addAnswer(
+          (answer as AnswerModel).copyWith(
+            questionId: questionModel.id,
+            quizId: questionModel.quizId,
+            courseId: questionModel.courseId,
+          ),
+        );
       }
     } on FirebaseException catch (e) {
       throw ServerException(
@@ -310,7 +318,10 @@ class QuizRemoteDataSrcImpl implements QuizRemoteDataSrc {
       await quizRef.set(quizModel.toMap());
 
       for (final question in quizModel.questions) {
-        await addQuestion(question);
+        await addQuestion((question as QuestionModel).copyWith(
+          quizId: quizModel.id,
+          courseId: quizModel.courseId,
+        ),);
       }
     } on FirebaseException catch (e) {
       throw ServerException(

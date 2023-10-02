@@ -53,9 +53,7 @@ class _AddQuizSheetState extends State<AddQuizSheet> {
         } else if (state is AddingQuiz) {
           CoreUtils.showLoadingDialog(context);
         } else if (state is QuizAdded) {
-          Navigator.pop(context);
-          // CoreUtils.showLoadingDialog(context);
-          // TODO(Add-Quiz): Send Notifications
+          CoreUtils.showSnackBar(context, 'Quiz added successfully');
         }
       },
       child: Padding(
@@ -203,14 +201,14 @@ class _AddQuizSheetState extends State<AddQuizSheet> {
                               subject != null) {
                             final now = DateTime.now();
                             final quiz = QuizModel.empty().copyWith(
-                              id: titleController.text.trim() + now.toString(),
                               courseId: subject!.id,
-                              questionSize: 35,
+                              questionSize: 10,
                               title: titleController.text.trim(),
                               description: descriptionController.text.trim(),
                               createdAt: now,
                               updatedAt: now,
                             );
+                            Navigator.pop(context);
                             Navigator.of(context).pushNamed(
                               AddQuestionsSheet.routeName,
                               arguments: quiz,
