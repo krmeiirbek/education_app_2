@@ -108,9 +108,21 @@ class _DashboardState extends State<Dashboard> {
                   BottomNavigationBarItem(
                     icon: Icon(
                       controller.currentIndex == 3
+                          ? IconlyBold.chat
+                          : IconlyLight.chat,
+                      color: controller.currentIndex == 3
+                          ? Colours.primaryColour
+                          : Colors.grey,
+                    ),
+                    label: 'Chat',
+                    backgroundColor: Colors.white,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      controller.currentIndex == 4
                           ? IconlyBold.profile
                           : IconlyLight.profile,
-                      color: controller.currentIndex == 3
+                      color: controller.currentIndex == 4
                           ? Colours.primaryColour
                           : Colors.grey,
                     ),

@@ -3,6 +3,8 @@
 import 'package:education_app/core/common/app/providers/tab_navigator.dart';
 import 'package:education_app/core/common/views/persistent_view.dart';
 import 'package:education_app/core/services/injection_container.dart';
+import 'package:education_app/src/chat/presentation/cubit/chat_cubit.dart';
+import 'package:education_app/src/chat/presentation/views/groups_view.dart';
 import 'package:education_app/src/course/features/videos/presentation/cubit/video_cubit.dart';
 import 'package:education_app/src/course/presentation/cubit/course_cubit.dart';
 import 'package:education_app/src/home/presentation/views/home_view.dart';
@@ -88,6 +90,17 @@ class DashboardController extends ChangeNotifier {
       child: const PersistentView(),
     ),
     ChangeNotifierProvider(
+      create: (_) => TabNavigator(
+        TabItem(
+          child: BlocProvider(
+            create: (_) => sl<ChatCubit>(),
+            child: const GroupsView(),
+          ),
+        ),
+      ),
+      child: const PersistentView(),
+    ),
+    ChangeNotifierProvider(
       create: (_) => TabNavigator(TabItem(child: const ProfileView())),
       child: const PersistentView(),
     ),
@@ -96,7 +109,7 @@ class DashboardController extends ChangeNotifier {
   List<Widget> get screens => _screens;
 
   // This variable keeps track of the currently selected screen index.
-  int _currentIndex = 3;
+  int _currentIndex = 4;
 
   int get currentIndex => _currentIndex;
 
