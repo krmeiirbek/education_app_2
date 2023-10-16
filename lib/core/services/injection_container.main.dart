@@ -20,6 +20,7 @@ Future<void> init() async {
   await _initMaterial();
   await _initExam();
   await _initNotifications();
+  await _initChat();
 }
 
 /// Initializes the onboarding-related dependencies.
@@ -214,5 +215,29 @@ Future<void> _initNotifications() async {
     ..registerLazySingleton<NotificationRepo>(() => NotificationRepoImpl(sl()))
     ..registerLazySingleton<NotificationRemoteDataSrc>(
           () => NotificationRemoteDataSrcImpl(firestore: sl(), auth: sl()),
+    );
+}
+
+Future<void> _initChat() async {
+  sl
+    ..registerFactory(
+          () => ChatCubit(
+        getGroups: sl(),
+        getMessages: sl(),
+        getUserById: sl(),
+        joinGroup: sl(),
+        leaveGroup: sl(),
+        sendMessage: sl(),
+      ),
+    )
+    ..registerLazySingleton(() => GetGroups(sl()))
+    ..registerLazySingleton(() => GetMessages(sl()))
+    ..registerLazySingleton(() => GetUserById(sl()))
+    ..registerLazySingleton(() => JoinGroup(sl()))
+    ..registerLazySingleton(() => LeaveGroup(sl()))
+    ..registerLazySingleton(() => SendMessage(sl()))
+    ..registerLazySingleton<ChatRepo>(() => ChatRepoImpl(sl()))
+    ..registerLazySingleton<ChatRemoteDataSource>(
+          () => ChatRemoteDataSourceImpl(firestore: sl(), auth: sl()),
     );
 }
