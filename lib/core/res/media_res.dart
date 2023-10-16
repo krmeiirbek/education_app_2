@@ -70,4 +70,5 @@ class MediaRes {
   // Lottie
   static const emptyLeaderboard = '$_baseLottie/empty_leaderboard.json';
   static const noNotifications = '$_baseLottie/no_notifications.json';
+  static const cheers = '$_baseLottie/cheers.json';
 }

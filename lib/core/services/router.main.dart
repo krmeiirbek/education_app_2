@@ -84,6 +84,19 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         ),
         settings: settings,
       );
+    case TestResultScreen.routeName:
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => sl<QuizCubit>(),
+          child: TestResultScreen(
+            quiz: (settings.arguments! as Map<String, dynamic>)['quiz']
+                as QuizModel,
+            userAnswers: (settings.arguments!
+                as Map<String, dynamic>)['userAnswers'] as List<List<String>>,
+          ),
+        ),
+        settings: settings,
+      );
     case AddQuestionsSheet.routeName:
       return _pageBuilder(
         (_) => BlocProvider(
@@ -163,6 +176,24 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         (_) => BlocProvider(
           create: (_) => sl<ExamCubit>(),
           child: CourseExamsView(settings.arguments! as Course),
+        ),
+        settings: settings,
+      );
+    case ExamHistoryDetailsScreen.routeName:
+      return _pageBuilder(
+            (_) => ExamHistoryDetailsScreen(settings.arguments! as UserExam),
+        settings: settings,
+      );
+    case ExamView.routeName:
+      return _pageBuilder(
+            (_) => BlocProvider(
+          create: (context) => sl<ExamCubit>(),
+          child: ChangeNotifierProvider(
+            create: (context) => ExamController(
+              exam: settings.arguments! as Exam,
+            ),
+            child: const ExamView(),
+          ),
         ),
         settings: settings,
       );

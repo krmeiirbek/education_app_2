@@ -7,6 +7,7 @@ import 'package:education_app/core/extensions/context_extension.dart';
 import 'package:education_app/core/utils/core_utils.dart';
 import 'package:education_app/src/quiz/data/models/quiz_model.dart';
 import 'package:education_app/src/quiz/presentation/cubit/quiz_cubit.dart';
+import 'package:education_app/src/quiz/presentation/views/test_result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -116,6 +117,13 @@ class _TestScreenState extends State<TestScreen> {
                         );
                       } else if (value == true) {
                         Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed(
+                          TestResultScreen.routeName,
+                          arguments: {
+                            'quiz': widget.quiz.copyWith(questions: questions),
+                            'userAnswers': questionsAnswers,
+                          },
+                        );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -246,9 +254,8 @@ class _TestScreenState extends State<TestScreen> {
                                 margin: const EdgeInsets.only(top: 10),
                                 decoration: BoxDecoration(
                                   color: questionsAnswers[questionId].contains(
-                                          questions[questionId]
-                                              .answers[index]
-                                              .uid,)
+                                    questions[questionId].answers[index].uid,
+                                  )
                                       ? Theme.of(context).colorScheme.primary
                                       : null,
                                   borderRadius: BorderRadius.circular(8),
